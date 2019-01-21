@@ -2,10 +2,35 @@
 
 An easy way to send emails with attachments in Go
 
-# Install
+**Install**
 
 ```bash
-go get github.com/scorredoira/email
+go get github.com/number23/email
+```
+
+**Add verbose mode**
+```bash
+$ cp /usr/local/go/src/net/smtp/* $GOPATH/src/sandspace/smtp/
+$ vi $GOPATH/src/sandspace/smtp/smtp.go
+```
+```go
+// cmd is a convenience function that sends a command and returns the response
+func (c *Client) cmd(expectCode int, format string, args ...interface{}) (int, string, error) {
+    if args != nil {
+        log.Println("[SEND] ", fmt.Sprintf(format, args...))
+    } else {
+        log.Println("[SEND] ", format)
+    }
+    id, err := c.Text.Cmd(format, args...)
+    if err != nil {
+        return 0, "", err
+    }
+    c.Text.StartResponse(id)
+    defer c.Text.EndResponse(id)
+    code, msg, err := c.Text.ReadResponse(expectCode)
+    log.Println("[RECIEVE] ", code, " ", msg)
+    return code, msg, err
+}
 ```
 
 # Usage
@@ -18,7 +43,7 @@ import (
 	"net/mail"
 	"net/smtp"
 
-	"github.com/scorredoira/email"
+	"github.com/number23/email"
 )
 
 func Example() {
