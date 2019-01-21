@@ -8,7 +8,7 @@ import (
 	"io/ioutil"
 	"mime"
 	"net/mail"
-	"net/smtp"
+	"sandspace/smtp"
 	"path/filepath"
 	"strings"
 	"time"
